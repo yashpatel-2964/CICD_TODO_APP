@@ -1,0 +1,33 @@
+name: Deploy React App to Windows 11
+
+on:
+  push:
+    branches:
+      - main # Deploy on push to the main branch
+
+jobs:
+  build:
+    runs-on: self-hosted # Use self-hosted runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16" # Specify Node.js version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test -- --watchAll=false # Run tests without watch mode
+
+      - name: Build the app
+        run: npm run build
+
+      - name: Deploy to Local Server
+        run: |
+          # Copy the build files to your server's root directory
+          xcopy /E /I /Y build\* "D:\ReactApp\"
